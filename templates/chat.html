@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        container {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        sidebar {
+            background-color: #EBE9E9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        avatar {
+            background: url('{{ user.user_photo }}') no-repeat center/cover;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+
+        menu-button {
+            background: #007bff;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        content {
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        chat-header h1 {
+            margin: 0;
+        }
+
+        chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            -ms-overflow-style: none;
+            padding-right: 10px;
+            overflow: hidden auto;
+            height: 1px;
+        }
+
+        chat-messages::-webkit-scrollbar {
+            display: none; /* Для Chrome, Safari */
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .message.self {
+            justify-content: flex-end;
+        }
+
+        .message.other {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 60%;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #EBE9E9;
+        }
+
+        .message.self .message-content {
+            background-color: #007bff;
+            color: white;
+        }
+
+        chat-input {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        chat-input input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            background: #EBE9E9;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        chat-input button {
+            background: #007bff;
+            border: none;
+            outline: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <container>
+        <sidebar>
+            <avatar onclick="window.location.href='/profile';"></avatar>
+            <menu-button>
+                <a href="/">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
+                        <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
+                    </svg>
+                </a>
+            </menu-button>
+            <menu-button>
+                <a href="/purchased">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
+                        <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z"/>
+                    </svg>
+                </a>
+            </menu-button>
+            <menu-button>
+                <a href="/chat">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
+                        <path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/>
+                    </svg>
+                </a>
+            </menu-button>
+        </sidebar>
+        <content>
+            <chat-header>
+                <h1>Чат</h1>
+            </chat-header>
+            <chat-messages id="chat-messages">
+                <!-- Сообщения будут добавляться сюда -->
+            </chat-messages>
+            <chat-input>
+                <input type="text" id="message-input" placeholder="Введите сообщение...">
+                <button id="send-button">Отправить</button>
+            </chat-input>
+        </content>
+    </container>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io();
+    
+        const chatMessages = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+    
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Предотвращаем перевод строки
+                sendMessage();
+            }
+        });
+    
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message) {
+                appendMessage(message, 'self');
+                socket.emit('message', message);
+                messageInput.value = '';
+            }
+        }
+    
+        socket.on('message', (msg) => {
+            typeMessage(msg, 'other'); // Добавляем анимацию набора входящего сообщения
+        });
+    
+        function appendMessage(text, type) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', type);
+            messageElement.innerHTML = `<div class="message-content">${text}</div>`;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    
+        function typeMessage(text, type) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', type);
+            const messageContent = document.createElement('div');
+            messageContent.classList.add('message-content');
+            messageElement.appendChild(messageContent);
+            chatMessages.appendChild(messageElement);
+            
+            let index = 0;
+            function typeNextLetter() {
+                if (index < text.length) {
+                    messageContent.textContent += text[index];
+                    index++;
+                    setTimeout(typeNextLetter, 25); // Скорость набора
+                } else {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+            typeNextLetter();
+        }
+    </script>
+    
+</body>
+</html>
