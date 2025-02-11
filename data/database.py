@@ -1,10 +1,11 @@
-# database.py
 import sqlite3
 from contextlib import contextmanager
 from configs.config import DB_NAME
 from utils.models import User, Tour, Transaction
 from typing import Optional, List, Dict, Any
+import logging
 
+logger = logging.getLogger(__name__)
 
 class Database:
     _instance = None
@@ -23,6 +24,9 @@ class Database:
         cursor = conn.cursor()
         try:
             yield cursor
+        except sqlite3.Error as e:
+            logger.error(f"Database error: {e}")
+            raise
         finally:
             conn.commit()
             conn.close()
@@ -45,7 +49,7 @@ class Database:
                 );
                 
                 CREATE TABLE IF NOT EXISTS tours (
-                    tours_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    tour_id INTEGER PRIMARY KEY AUTOINCREMENT,
                     photos TEXT,
                     name TEXT NOT NULL,
                     price REAL NOT NULL,
@@ -171,7 +175,6 @@ class Database:
         query = f'INSERT INTO hotels ({", ".join(fields)}) VALUES ({", ".join("?" * len(values))})'
         with self._get_cursor() as cursor:
             cursor.execute(query, values)
-
 
     def update_record(self, table: str, id_column: str, record_id: int, **kwargs):
         """Обновление записи в таблице"""

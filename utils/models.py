@@ -17,7 +17,7 @@ class User:
 
 @dataclass
 class Tour:
-    tours_id: int
+    tour_id: int
     photos: Optional[str]
     name: str
     price: float

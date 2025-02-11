@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-    <title>Подтверждение кода</title>
+    <title>Пополнить</title>
     <style>
         * {
             margin: 0;
@@ -57,7 +57,7 @@
         input {
             width: 100%;
             padding: 10px;
-            color: var(--fourth);
+            color: var(--second);
             background-color: var(--first);
             border: 1px solid var(--second);
             border-radius: 5px;
@@ -103,13 +103,13 @@
 <body>
     <switch id="switch"></switch>
     <div class="card">
-        <h1>Подтверждение кода</h1>
-        <form method="POST" action="{{ url_for('verify_code', email=email) }}">
+        <h1>Пополнить</h1>
+        <form method="POST" action="/create_ps">
             <div class="form-group">
-                <label for="code">Код</label>
-                <input type="text" id="code" name="code" required>
+                <label for="amount">Сумма</label>
+                <input type="text" id="amount" name="amount" required min="1" step="1" oninput="validateIntegerInput(this)">
             </div>
-            <button type="submit" class="btn">Подтвердить</button>
+            <button type="submit" class="btn">Пополнить</button>
         </form>
     </div>
     <script>
@@ -117,6 +117,9 @@
             loadTheme();
             createThemeSwitch();
         });
+        function validateIntegerInput(input) {
+            input.value = input.value.replace(/[^0-9]/g, ''); // Убираем всё, кроме цифр
+        }
     </script>
 </body>
 
