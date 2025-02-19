@@ -1,19 +1,26 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
         <title>Профиль</title>
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Tektur:wght@400..900&display=swap');
+
+            * {
+                font-family: "Tektur", Arial, sans-serif; 
+            }
+
             body {
-                font-family: Arial, sans-serif;
                 margin: 0;
                 padding: 0;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 height: 100vh;
-                background-color: #f0f0f0;
+                background-color: var(--first);
+                color: var(--second);
             }
 
             container {
@@ -21,18 +28,20 @@
                 grid-template-columns: 80px 1fr;
                 width: 100%;
                 height: 100%;
-                background: white;
+                background: var(--first);
                 border-radius: 10px;
                 overflow: hidden;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             }
 
             sidebar {
-                background-color: #EBE9E9;
+                background-color: var(--first);
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 padding: 20px 0;
+
+                border-right: 1px solid var(--third);
             }
 
             avatar {
@@ -44,7 +53,7 @@
             }
 
             menu-button {
-                background: #007bff;
+                background: var(--third);
                 width: 40px;
                 height: 40px;
                 display: flex;
@@ -52,6 +61,17 @@
                 align-items: center;
                 border-radius: 5px;
                 margin: 10px 0;
+
+                transition: background 0.2s;
+            }
+
+            menu-button:hover, menu-button:active {
+                background: var(--main);
+            }
+
+            menu-button a {
+                display: flex;
+                justify-content: center;
             }
 
             content {
@@ -63,10 +83,12 @@
                 display: flex;
                 gap: 20px;
                 margin-bottom: 30px;
+
+                max-width: 600px;
             }
 
             stat-card {
-                background: #f8f9fa;
+                background: var(--third);
                 padding: 15px 20px;
                 border-radius: 10px;
                 flex: 1;
@@ -74,7 +96,9 @@
 
             stat-card h3 {
                 margin: 0 0 5px 0;
-                color: #666;
+                color: var(--second);
+                font-weight: 100;
+                opacity: 0.7;
                 font-size: 14px;
             }
 
@@ -93,10 +117,9 @@
             }
 
             tour-card {
-                background: white;
+                background: var(--third);
                 border-radius: 15px;
                 overflow: hidden;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
                 transition: transform 0.2s;
                 display: block;
             }
@@ -128,47 +151,45 @@
             }
 
             .status-active {
-                background: #e3fcef;
+                background: #00a65025;
                 color: #00a650;
             }
 
             .status-completed {
-                background: #e9ecef;
+                background: #49505725;
                 color: #495057;
             }
 
             .status-upcoming {
-                background: #e3f2fd;
+                background: #007bff25;
                 color: #007bff;
             }
 
             tour-title {
                 margin: 0 0 10px 0;
                 font-size: 18px;
-                color: #333;
                 display: block;
             }
 
             tour-date {
-                color: #666;
+                color: var(--second);
+                opacity: 0.6;
                 font-size: 14px;
-                margin-bottom: 15px;
                 display: block;
             }
 
             tour-details {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
                 padding-top: 15px;
-                border-top: 1px solid #eee;
+                border-top: 1px solid var(--third);
                 display: block;
             }
 
             tour-price {
                 font-weight: bold;
-                color: #007bff;
+                color: var(--main);
                 display: block;
+                margin-bottom: 10px;
+                font-size: 20px;
             }
 
             tour-actions {
@@ -197,12 +218,13 @@
             }
 
             .secondary-button {
-                background: #e9ecef;
-                color: #495057;
+                background: var(--first);
+                color: var(--second);
             }
 
             .secondary-button:hover {
-                background: #dde2e6;
+                background: var(--second);
+                color: var(--first);
             }
 
             filter-bar {
@@ -214,22 +236,21 @@
             filter-button {
                 padding: 8px 16px;
                 border-radius: 20px;
-                border: 1px solid #dee2e6;
-                background: white;
-                color: #495057;
+                background: var(--third);
+                color: var(--second);
                 cursor: pointer;
                 transition: all 0.2s;
                 display: inline-block;
             }
 
             filter-button:hover {
-                background: #f8f9fa;
+                background: var(--second);
+                color: var(--first);
             }
 
             filter-button.active {
-                background: #007bff;
-                color: white;
-                border-color: #007bff;
+                background: var(--main);
+                color: var(--second);
             }
         </style>
     </head>
@@ -239,28 +260,29 @@
                 <avatar onclick="window.location.href='/profile';"></avatar>
                 <menu-button>
                     <a href="/">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--second)">
                             <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
                         </svg>
                     </a>
                 </menu-button>
                 <menu-button>
                     <a href="/purchased">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--second)">
                             <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z"/>
                         </svg>
                     </a>
                 </menu-button>
                 <menu-button>
                     <a href="/chat">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--second)">
                             <path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/>
                         </svg>
                     </a>
                 </menu-button>
+                <div id="switch"></div>
             </sidebar>
             <content>
-                <h1>Мои туры</h1>
+                <h1>My Tours</h1>
                 <purchased-stats>
                     <stat-card>
                         <h3>Активные туры</h3>
@@ -284,59 +306,39 @@
                 </filter-bar>
 
                 <tours-grid>
-                    <!-- Активный тур -->
+                    {% for tour in purchased_tours %}
                     <tour-card>
-                        <tour-image style="background-image: url('https://via.placeholder.com/300x160')"></tour-image>
+                        <tour-image style="background-image: url('{{ tour.image }}')"></tour-image>
                         <tour-content>
-                            <tour-status class="status-active">Активный</tour-status>
-                            <tour-title>Тур по горам Алматы</tour-title>
-                            <tour-date>15 - 20 февраля 2025</tour-date>
+                            <tour-status class="{{ tour.status_class }}">{{ tour.status_text }}</tour-status>
+                            <tour-title>{{ tour.title }}</tour-title>
+                            <tour-date>{{ tour.date }}</tour-date>
                             <tour-details>
-                                <tour-price>75,000 KZT</tour-price>
+                                <tour-price>{{ tour.price }}$</tour-price>
                                 <tour-actions>
-                                    <action-button class="primary-button">Подробнее</action-button>
+                                    {% if tour.status == 'Completed' %}
+                                        <action-button class="primary-button" onclick="window.location.href='/tour/{{ tour.id }}/review'">Отзыв</action-button>
+                                    {% elif tour.status == 'Upcoming' %}
+                                        <action-button class="secondary-button" onclick="window.location.href='/tour/{{ tour.id }}/cancel'">Отменить</action-button>
+                                        <action-button class="primary-button" onclick="window.location.href='/tour/{{ tour.id }}'">Подробнее</action-button>
+                                    {% else %}
+                                        <action-button class="primary-button" onclick="window.location.href='/tour/{{ tour.id }}'">Подробнее</action-button>
+                                    {% endif %}
                                 </tour-actions>
                             </tour-details>
                         </tour-content>
                     </tour-card>
-
-                    <!-- Предстоящий тур -->
-                    <tour-card>
-                        <tour-image style="background-image: url('https://via.placeholder.com/300x160')"></tour-image>
-                        <tour-content>
-                            <tour-status class="status-upcoming">Предстоящий</tour-status>
-                            <tour-title>Бурабай на выходные</tour-title>
-                            <tour-date>1 - 3 марта 2025</tour-date>
-                            <tour-details>
-                                <tour-price>45,000 KZT</tour-price>
-                                <tour-actions>
-                                    <action-button class="secondary-button">Отменить</action-button>
-                                    <action-button class="primary-button">Подробнее</action-button>
-                                </tour-actions>
-                            </tour-details>
-                        </tour-content>
-                    </tour-card>
-
-                    <!-- Завершенный тур -->
-                    <tour-card>
-                        <tour-image style="background-image: url('https://via.placeholder.com/300x160')"></tour-image>
-                        <tour-content>
-                            <tour-status class="status-completed">Завершен</tour-status>
-                            <tour-title>Чарынский каньон</tour-title>
-                            <tour-date>5 - 7 января 2025</tour-date>
-                            <tour-details>
-                                <tour-price>55,000 KZT</tour-price>
-                                <tour-actions>
-                                    <action-button class="primary-button">Отзыв</action-button>
-                                </tour-actions>
-                            </tour-details>
-                        </tour-content>
-                    </tour-card>
+                    {% endfor %}
                 </tours-grid>
             </content>
         </container>
 
         <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+            createThemeSwitch(); // Сначала создаем переключатель
+            loadTheme(); // Затем загружаем тему
+        });
+
             document.querySelectorAll('filter-button').forEach(button => {
                 button.addEventListener('click', () => {
                     // Убираем активный класс у всех кнопок

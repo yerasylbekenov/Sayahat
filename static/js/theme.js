@@ -3,7 +3,7 @@ const themes = {
         '--main': '#2090f7',
         '--first': '#ffffff',
         '--second': '#121212',
-        '--third': '#333333',
+        '--third': '#dfdfdf',
         '--fourth': '#ffffff',
         '--shadow': 'rgba(0, 0, 0, 0.1)',
         '--switch-icon': '🌞',
@@ -50,7 +50,7 @@ function createThemeSwitch() {
 
     switchContainer.innerHTML = '';
 
-    const slider = document.createElement('div');
+    const slider = document.createElement('menu-button');
     slider.classList.add('slider');
     slider.textContent = themes[localStorage.getItem('theme') || 'light']['--switch-icon'];
     slider.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--second');
@@ -65,23 +65,6 @@ function createThemeSwitch() {
 
     // Добавляем стили динамически
     const style = document.createElement('style');
-    style.textContent = `
-        #switch {
-            margin: 20px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .slider {
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-            padding: 10px;
-            border-radius: 20px;
-            text-align: center;
-            user-select: none;
-        }
-    `;
+    style.textContent = ``;
     document.head.appendChild(style);
 }

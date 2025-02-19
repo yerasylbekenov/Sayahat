@@ -9,7 +9,7 @@ from data import database
 from utils import mail, image
 from ai_2 import GigaChatClient
 from payments_api import PayPalAPI
-from controllers import auth_controller, chat_controller, tour_controller, user_controller, payments_controller
+from controllers import auth_controller, chat_controller, tour_controller, user_controller, payments_controller, purchased_controller
 
 class FlaskApp:
     def __init__(self):
@@ -30,6 +30,7 @@ class FlaskApp:
         self.user_controller = user_controller.UserController(self.db, self.uploader)
         self.chat_controller = chat_controller.ChatController(self.db, self.chat_client)
         self.payments_controller = payments_controller.PaymentsController(self.db, self.ps)
+        self.purchased_controller = purchased_controller. PurchasedController(self.db)
 
         # Register routes
         self._register_routes()
@@ -45,10 +46,10 @@ class FlaskApp:
 
         # Tour routes
         self.app.route('/')(self.auth_controller.login_required(self.tour_controller.index))
+        self.app.route('/tour/<int:tour_id>')(self.auth_controller.login_required(self.tour_controller.tour_details))
         self.app.route('/search')(self.auth_controller.login_required(
             lambda: self.tour_controller.search(request.args.get('term', '').strip())
         ))
-        self.app.route('/purchased')(self.auth_controller.login_required(self.tour_controller.purchased))
 
         # User routes
         self.app.route('/profile')(self.auth_controller.login_required(self.user_controller.profile))
@@ -61,6 +62,10 @@ class FlaskApp:
         self.app.route('/payments')(self.auth_controller.login_required(self.payments_controller.payments))
         self.app.route('/create_ps', methods=['POST'])(self.auth_controller.login_required(self.payments_controller.create_pslink))
         self.app.route('/payment/success')(self.auth_controller.login_required(self.payments_controller.payment_success))
+        
+        # purchased routes
+        self.app.route('/purchased')(self.auth_controller.login_required(self.purchased_controller.main))
+
 
     def _register_socket_events(self):
         @self.socketio.on('message')

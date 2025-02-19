@@ -7,10 +7,192 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-    <link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet">
     <title>Туристический Поиск</title>
 </head>
 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+* {
+    font-family: "Open Sans", Arial, sans-serif; 
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--second);
+    height: 100vh;
+    background-color: var(--first);
+
+    --color-color-color: var(--second);
+}
+
+container {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+sidebar {
+    background-color: var(--first);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+
+    border-right: 1px solid var(--third);
+}
+
+img[avatar] {
+    object-fit: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+tours-list a {
+    text-decoration: none;
+}
+
+menu-button {
+    background: var(--third);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    margin: 10px 0;
+
+    transition: background 0.2s;
+}
+
+menu-button:hover, menu-button:active {
+    background: var(--main);
+}
+
+menu-button a {
+    display: flex;
+    justify-content: center;
+}
+
+content {
+    padding: 9px;
+    box-sizing: border-box;
+}
+
+search-bar {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: var(--third);
+    border-radius: 10px;
+    padding: 5px;
+    overflow: hidden;
+}
+
+search-bar input {
+    color: var(--text-color);
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 8px;
+    font-size: 16px;
+}
+
+tours-list {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-top: 20px;
+}
+
+tour-card {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    transition: transform 0.2s, background 0.2s;
+}
+
+tour-card:hover {
+    transform: translateY(-5px);
+    background: var(--third);
+}
+
+tour-img {
+    min-width: 100px;
+    min-height: 100px;
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 7px;
+    margin-right: 15px;
+}
+
+tour-info {
+    margin-right: auto;
+}
+
+tour-info h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+tour-info p {
+    margin: 5px 0;
+    opacity: 0.6;
+}
+
+tour-price {
+    color: var(--main);
+    font-weight: bold;
+}
+
+map-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+map-container {
+    border-radius: 10px;
+    width: 98%;
+    height: 98%;
+}
+
+.mapboxgl-ctrl-bottom-left, 
+.mapboxgl-ctrl-bottom-right {
+    display: none;
+}
+
+a:visited {
+    color: var(--text-color); /* Убирает фиолетовый цвет у посещённых ссылок */
+}
+
+header h1 {
+    margin: 15px 5px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+header h1 span {
+    font-size: 18px;
+    opacity: 0.6;
+    margin-left: auto;
+}
+</style>
 <body>
     <container>
         <sidebar>
@@ -21,25 +203,16 @@
             <menu-button>
                 <a href="/">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                        fill="#fff">
+                        fill="var(--color-color-color)">
                         <path
                             d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
                     </svg>
                 </a>
             </menu-button>
             <menu-button>
-                <a href="/purchased">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                        fill="#fff">
-                        <path
-                            d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z" />
-                    </svg>
-                </a>
-            </menu-button>
-            <menu-button>
                 <a href="/chat">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                        fill="#fff">
+                        fill="var(--color-color-color)">
                         <path
                             d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z" />
                     </svg>
@@ -62,6 +235,7 @@
                         <tour-info>
                             <h3>{{ tour.name }}</h3>
                             <p>{{ tour.info }}</p>
+                            <p id="city">{{ tour.cities }}</p>
                         </tour-info>
                         <tour-price>{{ tour.price }}KZT</tour-price>
                     </tour-card>
@@ -82,29 +256,32 @@
             loadTheme(); // Затем загружаем тему
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const theme = localStorage.getItem('theme');
-
+        document.addEventListener("DOMContentLoaded", () => {
             mapboxgl.accessToken = 'pk.eyJ1IjoiYWxpYXNraGFuIiwiYSI6ImNtMWV2aWt6bzJqeWsybHF4YXFkc2Q1eDgifQ.XwvA2nbcCI_nqiu9VYetWg';
 
             const map = new mapboxgl.Map({
-                container: 'map',
-                style: localStorage.getItem('theme') === 'dark' ? themes.dark['--map-color'] : themes.light['--map-color'],
-                center: [66.9237, 48.0196],
-                zoom: 4,
-                preserveDrawingBuffer: true
+                container: "map",
+                style: localStorage.getItem("theme") === "dark" ? themes.dark["--map-color"] : themes.light["--map-color"],
+                center: [66.9237, 48.0196], // Казахстан по умолчанию
+                zoom: 4
             });
 
-            let lastTheme = localStorage.getItem('theme');
+            document.querySelectorAll("tour-card").forEach(card => {
+                card.addEventListener("mouseenter", function () {
+                    const cityElement = this.querySelector("#city"); // Берём <p id="city">
+                    if (!cityElement) return;
 
-            setInterval(() => {
-                const theme = localStorage.getItem('theme');
+                    const cityData = cityElement.textContent.trim().split(", ");
+                    if (cityData.length !== 3) return;
 
-                if (lastTheme !== theme) {
-                    map.setStyle(theme === 'dark' ? themes.dark['--map-color'] : themes.light['--map-color']);
-                    lastTheme = theme;
-                }
-            }, 1000);
+                    const lng = parseFloat(cityData[1]); // Долгота
+                    const lat = parseFloat(cityData[2]); // Широта
+
+                    if (isNaN(lng) || isNaN(lat)) return;
+
+                    map.flyTo({ center: [lng, lat], zoom: 10 });
+                });
+            });
         });
 
 
